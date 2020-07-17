@@ -1,6 +1,7 @@
 package com.example.grocery_list;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,7 +12,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.grocery_list.data.DatabaseHandler;
+import com.example.grocery_list.model.Item;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private AlertDialog.Builder builder;
@@ -21,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText itemQuantity;
     private EditText itemColor;
     private EditText itemSize;
+    private DatabaseHandler databaseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        databaseHandler = new DatabaseHandler(this);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,17 +46,40 @@ public class MainActivity extends AppCompatActivity {
                 createPopupDialog();
             }
         });
+
+        //check if item was saved
+        List<Item> items = databaseHandler.getAllItems();
+        for (Item item : items) {
+            Log.d("Main", "onCreate: " + item.getDateItemAdded());
+        }
     }
 
     private void createPopupDialog() {
         builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.popup, null);
 
-        groceryItem = view.findViewById(R.id.babyItem);
+        groceryItem = view.findViewById(R.id.groceryItem);
         itemQuantity = view.findViewById(R.id.itemQuantity);
         itemColor = view.findViewById(R.id.itemColor);
         itemSize = view.findViewById(R.id.itemSize);
-        saveButton = view.findViewById(R.id.saveButton);
+        saveButton = view.findViewById(R.id.saveButton);// save button is related to view
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!groceryItem.getText().toString().isEmpty()
+                        && !itemColor.getText().toString().isEmpty()
+                        && !itemQuantity.getText().toString().isEmpty()
+                        && !itemSize.getText().toString().isEmpty()) {
+                    saveItem(v);
+                }else {
+                    Snackbar.make(v, "Empty Fields not Allowed", Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+
+            }
+        });
 
         builder.setView(view);
         dialog = builder.create();// creating our dialog object
@@ -71,7 +104,29 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-        
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void saveItem(View view) {
+        
+        Item item = new Item();
+
+        String newItem = groceryItem.getText().toString().trim();
+        String newColor = itemColor.getText().toString().trim();
+        int quantity = Integer.parseInt(itemQuantity.getText().toString().trim());
+        int size = Integer.parseInt(itemSize.getText().toString().trim());
+
+        item.setItemName(newItem);
+        item.setItemColor(newColor);
+        item.setItemQuantity(quantity);
+        item.setItemSize(size);
+
+        databaseHandler.addItem(item);
+
+        Snackbar.make(view, "Item Saved",Snackbar.LENGTH_SHORT)
+                .show();
+
+
     }
 }

@@ -23,7 +23,7 @@
                 android:textStyle="italic" />
 
             <EditText
-                android:id="@+id/babyItem"
+                android:id="@+id/groceryItem"
                 android:layout_below="@id/title"
                 android:layout_width="match_parent"
                 android:hint="@string/hint_item"
@@ -32,7 +32,7 @@
             <EditText
                 android:id="@+id/itemQuantity"
                 android:inputType="number"
-                android:layout_below="@id/babyItem"
+                android:layout_below="@id/groceryItem"
                 android:layout_width="match_parent"
                 android:hint="@string/hint_qty"
                 android:layout_height="wrap_content" />
@@ -47,7 +47,7 @@
             <EditText
                 android:id="@+id/itemSize"
                 android:layout_below="@id/itemColor"
-                android:inputType="text"
+                android:inputType="number"
                 android:layout_width="match_parent"
                 android:hint="@string/hint_size"
                 android:layout_height="wrap_content" />
