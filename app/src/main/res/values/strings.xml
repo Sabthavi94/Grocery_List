@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">Grocery List</string>
     <string name="action_settings">Settings</string>
-    <string name="action_emoji">Emoji</string>
+    <string name="add_item">Add Item</string>
+    <string name="enter_item">Enter Item</string>
+    <string name="hint_item">Enter Item</string>
+    <string name="hint_qty">Quantity</string>
+    <string name="hint_color">Color</string>
+    <string name="hint_size">Size</string>
+    <string name="save_button">Save</string>
 
-    action_emoji
 </resources>
